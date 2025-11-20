@@ -1,0 +1,164 @@
+/* Dashboard styles */
+.cf-app { display:flex; min-height:100vh; }
+.cf-sidebar { width:220px; background:#1e2b2b; color:#fff; padding:20px; display:flex; flex-direction:column; }
+.cf-brand { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+.cf-logo { background:#fff; color:#1e2b2b; font-weight:700; width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:6px; }
+.cf-title { font-size:18px; font-weight:700; }
+.cf-nav { display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+.cf-nav-item { padding:10px 8px; color:#dfeeee; border-radius:6px; cursor:pointer; }
+.cf-nav-item.active { background:rgba(255,255,255,0.06); font-weight:700; }
+.cf-sidebar-footer { margin-top:auto; display:flex; gap:8px; }
+.cf-btn { background:#fff; color:#1e2b2b; border:none; padding:8px 10px; border-radius:6px; cursor:pointer; }
+.cf-btn.small { padding:6px 8px; font-size:12px; }
+
+.cf-main { flex:1; padding:24px 32px; background:#f6f8fb; }
+.cf-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.cf-header h1 { margin:0; font-size:22px; color:#2b3b4a; }
+.cf-user { text-align:right; font-size:13px; color:#505d66; }
+.avatar-btn { border: none; background: transparent; cursor: pointer; padding: 0; }
+.avatar-circle { width:36px; height:36px; border-radius:50%; background:#3b5560; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700 }
+.profile-menu { position:absolute; right:0; top:54px; background:#fff; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.12); width:260px; padding:10px; z-index:50 }
+.profile-item { display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:8px; width:100%; border-radius:6px; background:transparent; border:none; text-align:left; cursor:pointer }
+.profile-item:hover { background:#f2f7fb }
+.profile-name { font-weight:700; font-size:13px }
+.profile-email { font-size:12px; color:#6b7280 }
+.profile-title { font-size:12px; font-weight:700; color:#6b7280; margin-bottom:6px }
+
+/* Analysis filter input */
+.analysis-filter { width:360px; padding:8px 12px; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 1px 2px rgba(16,24,40,0.04); }
+.analysis-filter:focus { outline:none; box-shadow:0 0 0 4px rgba(58,160,214,0.06); border-color:#3aa0d6 }
+
+/* Database styles */
+.db-page { display:flex; flex-direction:column; gap:12px }
+.db-controls { display:flex; gap:12px; align-items:end; margin-bottom:8px }
+.db-control-item label { display:block; font-size:13px; color:#374151; margin-bottom:6px }
+.db-control-item input, .db-control-item select { padding:8px 10px; border-radius:8px; border:1px solid #e6e6e6 }
+.db-table-wrap { background:#fff; padding:8px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.04) }
+.db-table { width:100%; border-collapse:collapse }
+.db-table th, .db-table td { border:1px solid #ddd; padding:10px; text-align:left }
+.db-table th { background:#f7fafc; font-size:13px }
+.db-meter { font-weight:800 }
+.db-photo { text-align:center }
+.btn-edit { background:#10b981; color:#fff; border:none; padding:6px 12px; border-radius:20px; cursor:pointer }
+.btn-edit:hover { filter:brightness(0.95) }
+.btn-approve { background:#2563eb; color:#fff; border:none; padding:6px 10px; border-radius:20px; cursor:pointer }
+.btn-approved { background:#ef4444; color:#fff; border:none; padding:6px 10px; border-radius:20px; cursor:pointer }
+.btn-cancel { background:#e5e7eb; border:none; padding:6px 12px; border-radius:8px; cursor:pointer }
+
+/* Database edit view */
+.db-edit { background:#fff; padding:16px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.04) }
+.db-edit h2 { margin:0 0 12px }
+.db-edit input, .db-edit textarea { width:100%; padding:8px; border-radius:6px; border:1px solid #e5e7eb }
+.db-edit textarea { min-height:88px }
+
+/* Edit UI specific styles */
+.db-edit.edit-ui { display:flex; flex-direction:column; gap:18px; align-items:center; padding:26px }
+.db-edit-header { width:100%; display:flex; align-items:center; justify-content:space-between; max-width:980px }
+.db-edit-controls { display:flex; gap:12px; align-items:center }
+.resource-select { padding:10px 14px; border-radius:22px; border:1px solid #e6e6e6; background:#fff }
+.db-edit-title { font-size:28px; font-weight:700; text-align:center; flex:1 }
+.db-edit-form { width:100%; max-width:920px; display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:center }
+.form-row { display:flex; flex-direction:column; gap:6px }
+.form-label { font-size:14px; color:#374151 }
+.form-input { padding:12px 18px; border-radius:18px; border:1px solid #e2e8f0; font-size:16px }
+.form-textarea { padding:12px 18px; border-radius:12px; border:1px solid #e2e8f0; min-height:52px }
+.form-actions { grid-column: 2 / 3; display:flex; justify-content:flex-end }
+.btn-update { background:#10b981; color:#fff; border:none; padding:12px 28px; border-radius:24px; font-weight:700; cursor:pointer }
+.btn-update:hover { filter:brightness(0.95) }
+
+@media (max-width:900px) {
+  .db-edit-form { grid-template-columns: 1fr }
+  .form-actions { grid-column: 1 / -1; justify-content:flex-start }
+}
+
+
+
+.cf-stats { display:flex; gap:16px; margin-bottom:18px; }
+.stat-card { background:#0f3b2e; color:white; display:flex; justify-content:space-between; align-items:center; padding:16px; border-radius:8px; flex:1; }
+.stat-left { display:flex; align-items:center; gap:12px; }
+.stat-icon { font-size:28px; }
+.stat-label { font-size:13px; opacity:0.9; }
+.stat-right { text-align:right }
+.stat-value { font-size:20px; font-weight:800 }
+.stat-sub { font-size:12px; opacity:0.85 }
+
+.cf-panels { display:flex; gap:16px; margin-bottom:18px; }
+.panel { background:#fff; border-radius:8px; padding:12px; box-shadow:0 2px 6px rgba(0,0,0,0.04); flex:1 }
+.trend-panel { max-width:520px }
+.mini-chart { width:100%; height:100px; }
+.trend-legend { margin-top:8px; display:flex; gap:12px; }
+.trend-legend .dot { padding-left:6px }
+.trend-legend .e{ color:#ff7a00 }
+.trend-legend .w{ color:#00a0d9 }
+.trend-legend .s{ color:#b64d4d }
+
+.bar-list { display:flex; flex-direction:column; gap:8px }
+.bar-row { display:flex; align-items:center; gap:8px }
+.bar-label { width:140px; font-size:13px; color:#333 }
+.bar { flex:1; height:14px; background:#eee; border-radius:8px; overflow:hidden }
+.bar > div { height:100%; background:#6c9bd1 }
+.bar-value { width:64px; text-align:right; font-size:13px; }
+
+.cf-bottom { display:flex; gap:16px }
+.building-overview table { width:100%; border-collapse:collapse }
+.building-overview th, .building-overview td { text-align:left; padding:8px; border-bottom:1px solid #eee }
+.upcoming { width:260px }
+
+@media (max-width:900px) {
+  .cf-app { flex-direction:column }
+  .cf-sidebar { width:100%; flex-direction:row; gap:12px; align-items:center }
+  .cf-main { padding:12px }
+  .cf-panels { flex-direction:column }
+  .cf-bottom { flex-direction:column }
+}
+
+/* Notifications */
+.notification-page { max-width:920px; margin:0 auto }
+.notification-list { display:flex; flex-direction:column; gap:12px }
+.notification-item { display:flex; gap:12px; align-items:flex-start; background:#fff; padding:12px; border-radius:14px; box-shadow:0 2px 6px rgba(0,0,0,0.04) }
+.notification-avatar { width:44px; height:44px; border-radius:50%; background:#f3f4f6; display:flex; align-items:center; justify-content:center; font-size:18px }
+.notification-body { flex:1 }
+.notification-title { font-weight:700; color:#111827 }
+.notification-text { color:#374151; margin-top:6px; font-size:14px }
+.notification-time { color:#6b7280; font-size:13px }
+.btn-loadmore { background:#f3f4f6; border:1px solid #e5e7eb; padding:8px 18px; border-radius:20px; cursor:pointer }
+
+/* Reports */
+.reports-page { max-width:980px; margin:0 auto }
+.reports-controls { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px }
+.reports-filter input { padding:8px 10px; border-radius:8px; border:1px solid #e6e6e6 }
+.btn-viewall { background:#f3f4f6; border:1px solid #e5e7eb; padding:8px 14px; border-radius:20px }
+.reports-table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden }
+.reports-table th, .reports-table td { padding:12px 10px; border-bottom:1px solid #f1f5f9; text-align:left }
+.reports-table th { background:#fafafa; font-size:13px }
+.badge { display:inline-block; padding:6px 10px; border-radius:12px; font-weight:700; font-size:13px }
+.badge.success { background:#d1fae5; color:#065f46 }
+.badge.warn { background:#fff7ed; color:#92400e }
+.badge.danger { background:#fee2e2; color:#991b1b }
+.badge.complete { background:#e6fffa; color:#065f46 }
+.badge.incomplete { background:#fff1f2; color:#7f1d1d }
+.btn-accept { background:#000; color:#fff; border:none; padding:6px 12px; border-radius:20px; margin-right:8px }
+.btn-flag { background:#f3f4f6; border:1px solid #e5e7eb; padding:6px 12px; border-radius:20px }
+
+
+/* Schedule styles */
+.schedule{padding:18px}
+.schedule-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.calendar-head{font-weight:600;text-align:center;padding:6px 0;color:#444}
+.day{min-height:110px;border:1px solid #eee;border-radius:6px;padding:8px;position:relative;background:#fff}
+.day.empty{background:transparent;border:0}
+.day-num{position:absolute;top:6px;right:8px;font-size:12px;color:#777}
+.day-events{margin-top:20px;display:flex;flex-direction:column;gap:6px}
+.event-badge{background:#e9f4ff;border-left:4px solid #6c9bd1;padding:6px;border-radius:4px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.event-badge .ev-time{font-size:11px;color:#3b5a76;width:44px}
+.event-badge .ev-title{font-weight:600;font-size:13px}
+
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:60}
+.modal{background:#fff;padding:16px;border-radius:8px;min-width:360px;box-shadow:0 8px 24px rgba(0,0,0,0.12)}
+.event-form label{display:block;margin-bottom:8px}
+.event-form input,.event-form textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px}
+.event-form textarea{min-height:80px}
+.cf-btn.primary{background:#2b7be4;color:#fff}
+.cf-btn.danger{background:#e05b5b;color:#fff}
+
