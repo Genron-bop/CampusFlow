@@ -13,6 +13,7 @@
     "prisma:migrate": "npx prisma migrate dev --name init",
     "prisma:generate": "npx prisma generate",
     "db:seed": "node scripts/seed_from_parsed.js",
+    "db:clear": "node scripts/clear_measurements.js",
     "start:api": "node src/server/index.js",
     "preview": "vite preview"
   },
