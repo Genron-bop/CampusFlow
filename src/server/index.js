@@ -36,40 +36,5 @@ app.post('/api/measurements', async (req,res)=>{
   }
 })
 
-// Update a measurement by id
-app.put('/api/measurements/:id', async (req, res) => {
-  const id = Number(req.params.id)
-  const body = req.body
-  try {
-    const updated = await prisma.measurement.update({
-      where: { id },
-      data: {
-        // allow partial updates
-        date: body.date ? new Date(body.date) : undefined,
-        category: body.category ?? undefined,
-        label: body.label ?? undefined,
-        value: body.value !== undefined ? Number(body.value) : undefined,
-        source: body.source ?? undefined,
-      },
-    })
-    res.json(updated)
-  } catch (e) {
-    console.error(e)
-    res.status(400).json({ error: e.message })
-  }
-})
-
-// Delete a measurement by id
-app.delete('/api/measurements/:id', async (req, res) => {
-  const id = Number(req.params.id)
-  try {
-    await prisma.measurement.delete({ where: { id } })
-    res.status(204).end()
-  } catch (e) {
-    console.error(e)
-    res.status(400).json({ error: e.message })
-  }
-})
-
 const port = process.env.PORT || 4000
 app.listen(port, ()=> console.log(`API server listening on http://localhost:${port}`))
