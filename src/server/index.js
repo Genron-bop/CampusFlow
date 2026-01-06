@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
+import fs from 'fs'
+import path from 'path'
 
 dotenv.config()
 const prisma = new PrismaClient()
@@ -68,6 +70,91 @@ app.delete('/api/measurements/:id', async (req, res) => {
   } catch (e) {
     console.error(e)
     res.status(400).json({ error: e.message })
+  }
+})
+
+// Export measurements as CSV (download)
+app.get('/api/measurements/export', async (req, res) => {
+  try {
+    const rows = await prisma.measurement.findMany({ orderBy: { date: 'asc' } })
+    // simple CSV serializer
+    const headers = ['id', 'date', 'category', 'label', 'value', 'source', 'createdAt']
+    const escape = (v) => {
+      if (v === null || v === undefined) return ''
+      const s = String(v)
+      if (s.includes('"')) return `"${s.replace(/"/g, '""')}"`
+      if (s.includes(',') || s.includes('\n')) return `"${s}"`
+      return s
+    }
+    const csv = [headers.join(',')]
+    for (const r of rows) {
+      csv.push([r.id, r.date?.toISOString(), r.category, r.label, r.value, r.source, r.createdAt?.toISOString()].map(escape).join(','))
+    }
+    const body = csv.join('\n')
+    res.setHeader('Content-Type', 'text/csv')
+    res.setHeader('Content-Disposition', 'attachment; filename="measurements.csv"')
+    res.send(body)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// Upload CSV content (expects text/csv body) and insert into DB
+app.post('/api/measurements/upload', express.text({ type: ['text/csv', 'text/plain', '*/*'] }), async (req, res) => {
+  const csv = req.body
+  if (!csv || !csv.trim()) return res.status(400).json({ error: 'Empty upload' })
+  try {
+    // parse CSV using csv-parse
+    const parse = (await import('csv-parse/lib/sync')).default
+    const records = parse(csv, { columns: true, skip_empty_lines: true, trim: true })
+    // Map records to Measurement shape and insert in batches
+    const toInsert = records.map((r) => ({
+      date: r.date ? new Date(r.date) : new Date(),
+      category: (r.category || r.type || '').toLowerCase(),
+      label: r.label || r.meter || r.name || null,
+      value: r.value !== undefined ? Number(r.value) : (r.kwh ? Number(r.kwh) : null),
+      source: r.source || r.remarks || null
+    }))
+    // simple batch insert
+    for (let i = 0; i < toInsert.length; i += 500) {
+      const chunk = toInsert.slice(i, i + 500)
+      await prisma.measurement.createMany({ data: chunk, skipDuplicates: true })
+    }
+    res.json({ inserted: toInsert.length })
+  } catch (e) {
+    console.error('Upload failed', e)
+    res.status(400).json({ error: e.message })
+  }
+})
+
+// Regenerate CSV from DB and write to disk (two-way sync)
+import fs from 'fs'
+import path from 'path'
+app.post('/api/measurements/export-to-csv', async (req, res) => {
+  try {
+    const rows = await prisma.measurement.findMany({ orderBy: { date: 'asc' } })
+    const headers = ['id', 'date', 'category', 'label', 'value', 'source', 'createdAt']
+    const escape = (v) => {
+      if (v === null || v === undefined) return ''
+      const s = String(v)
+      if (s.includes('"')) return `"${s.replace(/"/g, '""')}"`
+      if (s.includes(',') || s.includes('\n')) return `"${s}"`
+      return s
+    }
+    const csv = [headers.join(',')]
+    for (const r of rows) {
+      csv.push([r.id, r.date?.toISOString(), r.category, r.label, r.value, r.source, r.createdAt?.toISOString()].map(escape).join(','))
+    }
+    const body = csv.join('\n')
+    const outDir = path.resolve(process.cwd(), 'data', 'exports')
+    await fs.promises.mkdir(outDir, { recursive: true })
+    const outPath = path.join(outDir, 'measurements.csv')
+    await fs.promises.writeFile(outPath, body, 'utf8')
+    res.json({ path: `/data/exports/measurements.csv`, outPath })
+  } catch (e) {
+    console.error('Export to CSV failed', e)
+    res.status(500).json({ error: e.message })
   }
 })
 
