@@ -73,11 +73,6 @@ export default function Dashboard({ onLogout }) {
 
   useEffect(() => {
     loadMeasurements()
-    // listen for imports from Database.jsx
-    const onImported = () => loadMeasurements()
-    window.addEventListener('db:imported', onImported)
-    // cleanup
-    return () => window.removeEventListener('db:imported', onImported)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
