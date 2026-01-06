@@ -12,7 +12,12 @@ export default function DatabaseEdit({ row, onSave, onCancel }) {
 
   const [current, setCurrent] = useState('')
   const [notes, setNotes] = useState(row.remarks || '')
-  const [resource, setResource] = useState('Electricity')
+  const [resource, setResource] = useState(() => {
+    // try to derive resource from raw data
+    const cat = row.__raw && row.__raw.category
+    if (cat) return String(cat).charAt(0).toUpperCase() + String(cat).slice(1)
+    return 'Electricity'
+  })
   const consumption = useMemo(() => {
     const c = parseFloat(current)
     if (!Number.isFinite(c)) return ''

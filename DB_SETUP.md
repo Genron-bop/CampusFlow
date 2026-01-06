@@ -34,6 +34,8 @@ npm run start:api
 # then open http://localhost:4000/api/measurements
 ```
 
+Note: To edit records from the app you must run the API server (`npm run start:api`) and have the DB running — the frontend dev server (Vite) will talk to the API at http://localhost:4000.
+
 7) Inspect data
 - Adminer UI at http://localhost:8080 (login: postgres / postgres / database campusflow)
 

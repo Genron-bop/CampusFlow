@@ -1,17 +1,8 @@
 import React, { useState } from 'react'
 import './Dashboard.css'
 
-export default function Database({ onEdit }) {
+export default function Database({ rows = [], loading = false, onEdit, onDelete }) {
   const [approved, setApproved] = useState(() => new Set())
-
-  const sample = [
-    { id: 1, submitted: '7:55 AM Aug 22 2025', meter: 'STEERHUB', kwh: '30 kwh', remarks: '"..."' },
-    { id: 2, submitted: '7:55 AM Aug 21 2025', meter: 'STEERHUB', kwh: '30 kwh', remarks: '"..."' },
-    { id: 3, submitted: '7:55 AM Aug 20 2025', meter: 'STEERHUB', kwh: '30 kwh', remarks: '"..."' },
-    { id: 4, submitted: '7:55 AM Aug 19 2025', meter: 'STEERHUB', kwh: '30 kwh', remarks: '"..."' },
-    { id: 5, submitted: '7:55 AM Aug 18 2025', meter: 'STEERHUB', kwh: '30 kwh', remarks: '"..."' },
-    { id: 6, submitted: '7:55 AM Aug 17 2025', meter: 'STEERHUB', kwh: '30 kwh', remarks: '"..."' },
-  ]
 
   return (
     <div className="db-page">
@@ -32,6 +23,7 @@ export default function Database({ onEdit }) {
       </div>
 
       <div className="db-table-wrap">
+        {loading ? <div style={{padding:20}}>Loading...</div> : (
         <table className="db-table">
           <thead>
             <tr>
@@ -44,26 +36,33 @@ export default function Database({ onEdit }) {
             </tr>
           </thead>
           <tbody>
-            {sample.map((r) => (
-              <tr key={r.id}>
-                <td>{r.submitted}</td>
-                <td className="db-meter">{r.meter}</td>
-                <td>{r.kwh}</td>
-                <td>{r.remarks}</td>
-                <td className="db-photo">📷</td>
-                <td style={{display:'flex', gap:8, alignItems:'center'}}>
-                  <button className="btn-edit" onClick={() => onEdit && onEdit(r)}>Edit</button>
-                  <button className={approved.has(r.id) ? 'btn-approved' : 'btn-approve'} onClick={() => {
-                    const next = new Set(approved)
-                    if (next.has(r.id)) next.delete(r.id)
-                    else next.add(r.id)
-                    setApproved(next)
-                  }}>{approved.has(r.id) ? 'Approved' : 'Approve'}</button>
-                </td>
-              </tr>
-            ))}
+            {rows.map((m) => {
+              const submitted = new Date(m.date || m.createdAt).toLocaleString()
+              const meter = m.label || `#${m.id}`
+              const unit = m.category === 'water' ? 'm³' : m.category === 'waste' ? 'kg' : 'kWh'
+              const kwh = m.value !== undefined && m.value !== null ? `${m.value} ${unit}` : ''
+              return (
+                <tr key={m.id}>
+                  <td>{submitted}</td>
+                  <td className="db-meter">{meter}</td>
+                  <td>{kwh}</td>
+                  <td>{m.source || ''}</td>
+                  <td className="db-photo">📷</td>
+                  <td style={{display:'flex', gap:8, alignItems:'center'}}>
+                    <button className="btn-edit" onClick={() => onEdit && onEdit(m)}>Edit</button>
+                    <button className={approved.has(m.id) ? 'btn-approved' : 'btn-approve'} onClick={() => {
+                      const next = new Set(approved)
+                      if (next.has(m.id)) next.delete(m.id)
+                      else next.add(m.id)
+                      setApproved(next)
+                    }}>{approved.has(m.id) ? 'Approved' : 'Approve'}</button>
+                    <button className="btn-delete" onClick={() => onDelete && onDelete(m.id)} style={{background:'#ff4d4d'}}>Delete</button>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
-        </table>
+        </table>) }
       </div>
     </div>
   )

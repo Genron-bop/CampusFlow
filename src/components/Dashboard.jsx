@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Sidebar from './Sidebar'
 import StatCard from './StatCard'
 import BuildingOverview from './BuildingOverview'
@@ -55,6 +55,26 @@ export default function Dashboard({ onLogout }) {
     setMenuOpen(false)
   }
   const [selectedRow, setSelectedRow] = useState(null)
+  const [measurements, setMeasurements] = useState([])
+  const [loadingMeasurements, setLoadingMeasurements] = useState(false)
+
+  async function loadMeasurements() {
+    setLoadingMeasurements(true)
+    try {
+      const res = await fetch('http://localhost:4000/api/measurements')
+      const data = await res.json()
+      setMeasurements(data)
+    } catch (e) {
+      console.error('Failed to load measurements', e)
+    } finally {
+      setLoadingMeasurements(false)
+    }
+  }
+
+  useEffect(() => {
+    loadMeasurements()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="cf-app">
@@ -144,9 +164,24 @@ export default function Dashboard({ onLogout }) {
 
         {view === 'database' && (
           <section>
-            <Database onEdit={(row) => {
+            <Database rows={measurements} loading={loadingMeasurements} onEdit={(m) => {
+              // transform server measurement into the UI row the edit form expects
+              const row = {
+                id: m.id,
+                meter: m.label || `#${m.id}`,
+                kwh: m.value,
+                remarks: m.source || '',
+                date: m.date,
+                __raw: m
+              }
               setSelectedRow(row)
               setView('database-edit')
+            }} onDelete={async (id) => {
+              if (!confirm('Delete this record?')) return
+              try {
+                await fetch(`http://localhost:4000/api/measurements/${id}`, { method: 'DELETE' })
+                loadMeasurements()
+              } catch (e) { console.error(e); alert('Failed to delete') }
             }} />
           </section>
         )}
@@ -159,10 +194,27 @@ export default function Dashboard({ onLogout }) {
 
         {view === 'database-edit' && (
           <section>
-            <DatabaseEdit row={selectedRow} onSave={(r) => {
-              // Save placeholder: in real app we'd persist changes
-              alert(`Saved (demo) for row id=${r.id}`)
-              setView('database')
+            <DatabaseEdit row={selectedRow} onSave={async (r) => {
+              // r contains computed consumption and notes; map to measurement fields
+              try {
+                const payload = {
+                  // keep date as-is if available
+                  category: (r.resource || 'Electricity').toLowerCase(),
+                  value: Number(r.consumption),
+                  source: r.remarks
+                }
+                await fetch(`http://localhost:4000/api/measurements/${r.id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                })
+                alert('Saved')
+                setView('database')
+                loadMeasurements()
+              } catch (e) {
+                console.error(e)
+                alert('Failed to save')
+              }
             }} onCancel={() => setView('database')} />
           </section>
         )}
