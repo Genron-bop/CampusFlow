@@ -1,0 +1,35 @@
+name: campus_flow
+description: CampusFlow minimal app with banner.
+publish_to: 'none'
+version: 0.0.1
+environment:
+  sdk: ">=2.18.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+
+  assets:
+    - assets/images/banner.png
+    - assets/images/fade-bg.jpg
+    - assets/images/bsu.jpg
+    - assets/images/app-logo.png
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app-logo.png"
+  adaptive_icon_background: "#FFFFFF"
